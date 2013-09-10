@@ -64,6 +64,29 @@ set_of_rules = {
 },
 
 { 
+	-- auto close tasks
+	[[ Auto Close tasks when task complete]],  
+	[[ ACT_TYPE_SC == "TASK COMPLETE"
+		and EVENT_TYPE == "t" ]], 
+	{ ACT_TYPE_SC = "CLOSURE", 
+		CAUSE_ITEM_SC = "CLOSE TASK", 
+		CAUSE_SC = "TASK COMPLETE",
+		SERVICE_TIME = 1,
+		ACT_DESC = [[ Automatic closure of task. ]] },
+	"stop" 
+},
+
+-- Task Complete action taken on non-task!
+{ 
+	[[ Incorrect use of TASK COMPLETE ]], 
+	[[ ACT_TYPE_SC == "TASK COMPLETE" 
+		and EVENT_TYPE ~= "t" ]], 
+	{ ACT_TYPE_ORIG_SC = "TASK COMPLETE", 
+		ACT_TYPE_SC = "TASK COMPLETEX" },
+	"stop" 
+},
+
+{ 
 	[[ Email selected user or affected/reporting users]],  
 	[[ ACT_TYPE_SC == "EMAIL CUSTOMER" ]], 
 	[["\_AxiosSoftware\assyst Smart Mail 1.5\send_email.exe" -v -config "\_Axios_Config\SmartMail\Logic\send_email_rd.lua" ACT_REG_ID=$ACT_REG_ID  ]], 
